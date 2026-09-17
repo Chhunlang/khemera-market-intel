@@ -66,4 +66,6 @@ SEEN_URLS_JSON = os.path.join(DATA_DIR, "seen_urls.json")
 # How many days of daily items stay in data/daily.json (older ones remain in data/archive/*.json)
 DAILY_WINDOW_DAYS = 14
 
-GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+# llama-3.3-70b-versatile returned 404 model_not_found for this account (likely gated
+# behind an opt-in on some Groq accounts) — llama-3.1-8b-instant is available by default.
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.1-8b-instant")
