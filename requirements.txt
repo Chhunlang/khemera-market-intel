@@ -2,3 +2,7 @@ feedparser==6.0.11
 requests==2.32.3
 beautifulsoup4==4.12.3
 groq==0.11.0
+# groq==0.11.0 passes a `proxies` kwarg into httpx.Client() that httpx 0.28+ removed,
+# breaking every enrich() call with "Client.__init__() got an unexpected keyword
+# argument 'proxies'". Pin httpx below that until groq is upgraded.
+httpx<0.28
