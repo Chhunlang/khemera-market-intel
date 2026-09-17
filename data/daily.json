@@ -1,19 +1,4 @@
 {
-  "generated_at": null,
-  "items": [
-    {
-      "id": "sample-1",
-      "date": "—",
-      "time": "",
-      "category": "oil",
-      "scope": "Local",
-      "impact": "High",
-      "title": "Sample item — the pipeline hasn't run yet",
-      "summary": "This is placeholder content so the page isn't blank before the first automated run. Once the daily GitHub Action runs, this will be replaced with real scraped and AI-summarized news.",
-      "source": "Khemera Market Intelligence setup",
-      "url": "#",
-      "pillar": "Group",
-      "analysis": "No action needed — this placeholder disappears automatically after the first successful daily run."
-    }
-  ]
+  "generated_at": "2026-09-17T13:32:53.071585+07:00",
+  "items": []
 }
