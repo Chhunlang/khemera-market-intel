@@ -1,0 +1,56 @@
+"""Shared config for the Khemera Market Intelligence pipeline."""
+import os
+
+# --- CBM business chain "pillars" this portal tags every item against ---
+PILLARS = [
+    "P1 Cement",
+    "P2 Ready-Mixed Concrete",
+    "P3 Building Materials",
+    "P4 CBM-Adjacent",
+    "Group",  # macro / company-wide items that don't map to one pillar
+]
+
+CATEGORIES = ["economy", "construct", "tourism", "regulation", "politics", "oil"]
+SCOPES = ["Local", "World"]
+IMPACTS = ["High", "Medium", "Low"]
+
+# --- News sources the daily scraper pulls from ---
+# `kind` tells scrape.py how to read the source:
+#   "rss"   -> parse as an RSS/Atom feed
+#   "html"  -> fetch the page and pull article links with a CSS selector
+# `delay` overrides the default politeness pause (seconds) after fetching this source.
+# Verified 2026-09-17 — see README "Known limitations" for sources that are skipped and why.
+SOURCES = [
+    {"name": "Khmer Times", "kind": "rss", "url": "https://www.khmertimeskh.com/feed/"},
+    {"name": "Cambodianess", "kind": "html", "url": "https://cambodianess.com/",
+     "selector": "h5 a, h3 a, article a"},
+    {"name": "Kampuchea Thmey", "kind": "rss", "url": "https://kampucheathmey.com/feed", "delay": 10},
+    {"name": "Construction & Property", "kind": "html", "url": "https://construction-property.com/all-news/",
+     "selector": "article a, h2 a, h3 a"},
+    {"name": "B2B Asia News", "kind": "html", "url": "https://b2b-asianews.com/business/news",
+     "selector": "a h3, a h4, article a"},
+    {"name": "Realestate.com.kh", "kind": "json_api",
+     "url": "https://www.realestate.com.kh/api/blog/?page=1&page_size=10&show_content=true&strip_html=true&type=news"},
+    {"name": "Open Development Cambodia", "kind": "html", "url": "https://opendevelopmentcambodia.net/news/",
+     "selector": "h5 a, h3 a, article a"},
+    {"name": "OilPrice.com", "kind": "rss", "url": "https://oilprice.com/rss/main"},
+    {"name": "Ministry of Mines and Energy", "kind": "html", "url": "https://mme.gov.kh/newsroom",
+     "selector": "article a, h2 a, h3 a"},
+]
+# NOT included, and why (see README "Known limitations" for details):
+#   - Phnom Penh Post: blocks automated requests (HTTP 403 on every fetch, including robots.txt)
+#   - Ministry of Commerce (moc.gov.kh): same 403 behavior, could not verify a safe fetch path
+# Their stories are still picked up indirectly whenever Khmer Times / Kampuchea Thmey /
+# Construction & Property report on the same news (as in the mockup).
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
+ARCHIVE_DIR = os.path.join(DATA_DIR, "archive")
+DAILY_JSON = os.path.join(DATA_DIR, "daily.json")
+WEEKLY_JSON = os.path.join(DATA_DIR, "weekly.json")
+MONTHLY_JSON = os.path.join(DATA_DIR, "monthly.json")
+SEEN_URLS_JSON = os.path.join(DATA_DIR, "seen_urls.json")
+
+# How many days of daily items stay in data/daily.json (older ones remain in data/archive/*.json)
+DAILY_WINDOW_DAYS = 14
+
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")

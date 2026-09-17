@@ -1,0 +1,58 @@
+name: Weekly and monthly executive summaries
+
+on:
+  schedule:
+    # Every Monday 01:30 UTC = 08:30 ICT -> weekly summary
+    - cron: "30 1 * * 1"
+    # 1st of every month, 02:00 UTC = 09:00 ICT -> monthly summary
+    - cron: "0 2 1 * *"
+  workflow_dispatch:
+    inputs:
+      period:
+        description: "Force a specific period (leave blank to auto-detect from the schedule)"
+        type: choice
+        options: ["", "weekly", "monthly"]
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-update
+  cancel-in-progress: false
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: Decide which period to run
+        id: period
+        run: |
+          if [ -n "${{ github.event.inputs.period }}" ]; then
+            echo "value=${{ github.event.inputs.period }}" >> "$GITHUB_OUTPUT"
+          elif [ "$(date -u +%d)" = "01" ]; then
+            echo "value=monthly" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=weekly" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run summary build
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python scripts/build_weekly_monthly.py --period ${{ steps.period.outputs.value }}
+
+      - name: Commit and push updated data
+        run: |
+          git config user.name "khemera-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "${{ steps.period.outputs.value }} summary update $(date -u +'%Y-%m-%d')"
+          git push

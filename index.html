@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khemera Market Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Source+Serif+4:ital@0;1&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --khemera-gold-50:#FDF8E7; --khemera-gold-300:#F3CD4F; --khemera-gold-400:#F1BF31; --khemera-gold-500:#E5AB18; --khemera-gold-600:#C28E0F;
+    --khemera-brown-500:#875723; --khemera-brown-600:#6E461C; --khemera-brown-700:#553616; --khemera-brown-800:#3D2810; --khemera-brown-900:#261809;
+    --khemera-cream-50:#FBF9F4; --khemera-cream-100:#F5F1E8; --khemera-cream-200:#ECE5D4; --khemera-cream-300:#D8CDB6;
+    --khemera-cream-500:#8B8068; --khemera-cream-600:#5F5749; --khemera-cream-700:#3F392F; --khemera-cream-800:#25221C;
+    --success:#4F8A4C; --success-bg:#E5F0E1; --warning:#C97A1B; --warning-bg:#FCEFD9; --danger:#B43A2F; --danger-bg:#F7E1DD; --info:#3F6F8A; --info-bg:#E2ECF2;
+    --bg-page:var(--khemera-cream-50); --bg-surface:#FFFFFF; --fg-1:var(--khemera-cream-800); --fg-2:var(--khemera-cream-700); --fg-3:var(--khemera-cream-600);
+    --fg-mute:var(--khemera-cream-500); --border-1:var(--khemera-cream-200); --border-2:var(--khemera-cream-300);
+    --font-sans:'Nunito',system-ui,sans-serif; --font-serif:'Source Serif 4',Georgia,serif; --font-mono:'JetBrains Mono',monospace;
+    --shadow-xs:0 1px 2px rgba(37,34,28,0.06); --shadow-md:0 4px 16px rgba(37,34,28,0.10);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg-page);font-family:var(--font-sans);color:var(--fg-1);}
+  a{color:var(--khemera-brown-600);text-decoration:none;text-underline-offset:3px;}
+  a:hover{text-decoration:underline;}
+  button{font-family:inherit;cursor:pointer;}
+
+  .header{background:#3D2810;background-image:radial-gradient(ellipse at 20% 0%,#4A3705 0%,#261809 70%);border-bottom:1px solid rgba(241,191,49,0.28);position:sticky;top:0;z-index:50;}
+  .header-inner{max-width:1440px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;min-height:68px;}
+  .brand{display:flex;align-items:center;gap:11px;flex:none;}
+  .brand-dot{width:30px;height:30px;border-radius:8px;background:var(--khemera-gold-400);display:flex;align-items:center;justify-content:center;font-weight:800;color:#3D2810;font-size:13px;}
+  .brand-title{font-size:13.5px;font-weight:800;color:#FBF9F4;line-height:1.15;}
+  .brand-sub{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F1BF31;}
+  nav.tabs{display:flex;align-items:center;gap:2px;flex-wrap:wrap;flex:1 1 320px;}
+  nav.tabs button{background:none;border:none;padding:10px 12px;font-size:13.5px;font-weight:600;position:relative;color:rgba(251,249,244,0.6);}
+  nav.tabs button.active{color:#FBF9F4;}
+  nav.tabs button.active::after{content:"";position:absolute;left:8px;right:8px;bottom:-12px;height:3px;background:#F1BF31;border-radius:2px 2px 0 0;}
+
+  main{max-width:1440px;margin:0 auto;padding:32px 28px 80px;}
+  .layout{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;}
+  .col-main{display:flex;flex-direction:column;gap:20px;flex:1 1 520px;min-width:0;}
+  .col-side{display:flex;flex-direction:column;gap:16px;flex:1 1 300px;min-width:280px;max-width:360px;}
+
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--khemera-brown-500);}
+  h1{margin:0;font-size:29px;font-weight:700;letter-spacing:-.01em;}
+  .meta{font-size:13px;color:var(--fg-3);}
+
+  .chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .chip{display:flex;align-items:center;gap:7px;border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:600;border:1px solid var(--border-2);background:var(--bg-surface);color:var(--fg-2);}
+  .chip.active{background:var(--khemera-cream-100);border-color:var(--khemera-brown-500);color:var(--khemera-brown-700);}
+  .chip .dot{width:7px;height:7px;border-radius:999px;}
+  .chip .count{font-family:var(--font-mono);font-size:11px;opacity:.65;}
+
+  .card{background:var(--bg-surface);border:1px solid var(--border-1);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:11px;box-shadow:var(--shadow-xs);cursor:pointer;}
+  .card:hover{box-shadow:var(--shadow-md);border-color:var(--border-2);}
+  .card-tags{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .tag-cat{display:flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px 4px 9px;font-size:11px;font-weight:700;background:var(--khemera-cream-100);color:var(--khemera-brown-600);}
+  .tag-cat .dot{width:7px;height:7px;border-radius:999px;}
+  .tag-scope{border-radius:999px;padding:4px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--border-2);color:var(--fg-3);}
+  .tag-impact{display:flex;align-items:center;gap:5px;border-radius:999px;padding:4px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
+  .tag-impact .dot{width:5px;height:5px;border-radius:999px;}
+  .spacer{flex:1;min-width:8px;}
+  .time{font-family:var(--font-mono);font-size:11px;color:var(--fg-mute);}
+  .card h2{margin:0;font-size:18.5px;font-weight:700;line-height:1.35;letter-spacing:-.01em;}
+  .card p{margin:0;font-size:14.5px;line-height:1.6;color:var(--fg-2);max-width:78ch;}
+  .card-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:2px;font-size:12.5px;}
+  .card-foot .pillar{font-size:12px;color:var(--fg-3);}
+  .analysis-box{background:var(--khemera-gold-50);border:1px solid rgba(241,191,49,.35);border-radius:12px;padding:16px 18px;display:none;flex-direction:column;gap:8px;margin-top:4px;}
+  .analysis-box.open{display:flex;}
+  .analysis-box .label{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--khemera-brown-500);}
+  .analysis-box p{color:var(--khemera-brown-700);}
+
+  .side-panel{background:#261809;background-image:radial-gradient(ellipse at 85% 0%,#4A3705 0%,#261809 70%);border:1px solid rgba(241,191,49,.24);border-radius:16px;padding:22px;color:#FBF9F4;}
+  .side-panel h3{margin:0 0 12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#F1BF31;}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+  .stat-tile{background:var(--bg-surface);border:1px solid var(--border-1);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow-xs);}
+  .stat-tile .label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3);}
+  .stat-tile .value{font-size:28px;font-weight:800;letter-spacing:-.02em;}
+  .stat-tile .sub{font-size:12.5px;color:var(--fg-3);}
+
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;}
+  .cat-card{background:var(--bg-surface);border:1px solid var(--border-1);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow-xs);}
+  .cat-card-head{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--border-1);flex-wrap:wrap;}
+  .cat-card-head h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;}
+  .cat-card-head .sq{width:10px;height:10px;border-radius:3px;}
+  .impact-pill{border-radius:999px;padding:4px 11px;font-size:11px;font-weight:700;white-space:nowrap;}
+  .bullet{display:flex;gap:10px;align-items:flex-start;}
+  .bullet .dot{width:5px;height:5px;border-radius:999px;background:var(--khemera-gold-500);margin-top:8px;flex:none;}
+  .bullet span{font-size:13.5px;line-height:1.5;color:var(--fg-2);}
+  .bullet a{font-size:12px;font-weight:600;white-space:nowrap;}
+
+  .monthly-hero{background:#261809;background-image:radial-gradient(ellipse at 70% 20%,#4A3705 0%,#261809 60%,#14120E 100%);}
+  .monthly-hero-inner{max-width:1100px;margin:0 auto;padding:64px 28px 56px;display:flex;flex-direction:column;gap:20px;}
+  .monthly-hero h1{color:#FBF9F4;font-size:40px;font-weight:800;line-height:1.15;letter-spacing:-.02em;max-width:22ch;}
+  .monthly-hero p{margin:0;font-family:var(--font-serif);font-size:19px;line-height:1.65;color:rgba(251,249,244,.84);max-width:68ch;}
+  .monthly-hero strong{color:#F1BF31;font-weight:600;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--border-1);border:1px solid var(--border-1);border-radius:14px;overflow:hidden;}
+  .kpi-tile{background:var(--bg-surface);padding:22px 20px;display:flex;flex-direction:column;gap:7px;}
+  .kpi-tile .label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3);}
+  .kpi-tile .value{font-family:var(--font-mono);font-size:25px;font-weight:700;letter-spacing:-.02em;}
+
+  .empty-state{padding:40px;text-align:center;color:var(--fg-3);font-size:14px;}
+  .loading{padding:40px;text-align:center;color:var(--fg-3);font-size:14px;}
+  .footer-note{max-width:1440px;margin:0 auto;padding:0 28px 40px;font-size:12px;color:var(--fg-mute);}
+
+  @media(prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg-page:#1B1712; --bg-surface:#26211A; --fg-1:#F2ECE0; --fg-2:#D8CFBE; --fg-3:#A99E89; --fg-mute:#8B8068;
+      --border-1:#3A3226; --border-2:#4A4132; --khemera-cream-100:#2E2820;
+    }
+  }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-dot">K</div>
+      <div>
+        <div class="brand-title">Khemera Market Intelligence</div>
+        <div class="brand-sub">BD Team · Internal</div>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-tab="daily" class="active">Daily Feed</button>
+      <button data-tab="weekly">Weekly</button>
+      <button data-tab="monthly">Monthly Executive</button>
+    </nav>
+  </div>
+</header>
+
+<main id="app">
+  <div class="loading">Loading…</div>
+</main>
+<div class="footer-note">Data refreshes automatically once a day. Summaries and analysis are AI-generated from public news sources — verify before using in external communications.</div>
+
+<script>
+const CATEGORY_META = {
+  economy:    { label: "Economy",    dot: "#875723" },
+  construct:  { label: "Construction", dot: "#C28E0F" },
+  tourism:    { label: "Tourism",     dot: "#4F8A4C" },
+  regulation: { label: "Regulation",  dot: "#3F6F8A" },
+  politics:   { label: "Politics",    dot: "#5F5749" },
+  oil:        { label: "Oil & Energy", dot: "#B43A2F" },
+};
+const IMPACT_META = {
+  High:   { fg: "#B43A2F", bg: "#F7E1DD" },
+  Medium: { fg: "#C97A1B", bg: "#FCEFD9" },
+  Low:    { fg: "#5F5749", bg: "#ECE5D4" },
+};
+
+let STATE = { tab: "daily", categoryFilter: null, daily: null, weekly: null, monthly: null };
+
+async function loadJSON(path) {
+  try {
+    const res = await fetch(path + "?v=" + Date.now());
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) { return null; }
+}
+
+function esc(s) {
+  const d = document.createElement("div");
+  d.textContent = s ?? "";
+  return d.innerHTML;
+}
+
+function renderTabs() {
+  document.querySelectorAll("#tabs button").forEach(b => {
+    b.classList.toggle("active", b.dataset.tab === STATE.tab);
+  });
+}
+
+function renderDaily() {
+  const data = STATE.daily;
+  if (!data) return `<div class="empty-state">No daily data yet. The pipeline hasn't run, or data/daily.json is missing.</div>`;
+  const items = data.items || [];
+  const counts = {};
+  items.forEach(it => counts[it.category] = (counts[it.category] || 0) + 1);
+
+  const chips = Object.keys(CATEGORY_META).filter(k => counts[k]).map(k => {
+    const meta = CATEGORY_META[k];
+    const active = STATE.categoryFilter === k;
+    return `<button class="chip ${active ? "active" : ""}" data-cat="${k}">
+      <span class="dot" style="background:${meta.dot}"></span>${meta.label}
+      <span class="count">${counts[k]}</span>
+    </button>`;
+  }).join("");
+
+  const filtered = STATE.categoryFilter ? items.filter(it => it.category === STATE.categoryFilter) : items;
+  const latestDate = items[0]?.date || "";
+
+  const cards = filtered.map((it, i) => {
+    const cat = CATEGORY_META[it.category] || { label: it.category, dot: "#875723" };
+    const imp = IMPACT_META[it.impact] || IMPACT_META.Medium;
+    return `<article class="card" data-idx="${i}">
+      <div class="card-tags">
+        <span class="tag-cat"><span class="dot" style="background:${cat.dot}"></span>${cat.label}</span>
+        <span class="tag-scope">${esc(it.scope)}</span>
+        <span class="tag-impact" style="color:${imp.fg};background:${imp.bg}"><span class="dot" style="background:${imp.fg}"></span>${esc(it.impact)} impact</span>
+        <div class="spacer"></div>
+        <span class="time">${esc(it.time || "")}</span>
+      </div>
+      <h2>${esc(it.title)}</h2>
+      <p>${esc(it.summary)}</p>
+      <div class="card-foot">
+        <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.source)} ↗</a>
+        <span style="color:var(--border-2)">·</span>
+        <span class="pillar">${esc(it.pillar)}</span>
+      </div>
+      <div class="analysis-box" id="analysis-${i}">
+        <span class="label">What this means for CBM</span>
+        <p>${esc(it.analysis)}</p>
+      </div>
+    </article>`;
+  }).join("") || `<div class="empty-state">No items in this category.</div>`;
+
+  return `<div class="layout">
+    <div class="col-main">
+      <div class="page-head">
+        <div>
+          <span class="eyebrow">Daily Feed</span>
+          <h1>${esc(latestDate) || "No data"}</h1>
+          <div class="meta">${items.length} updates · last refreshed ${data.generated_at ? new Date(data.generated_at).toLocaleString() : "—"}</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span style="font-size:12px;font-weight:600;color:var(--fg-3);margin-right:2px">Filter</span>
+        ${chips}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px" id="daily-cards">${cards}</div>
+    </div>
+    <aside class="col-side">
+      <div class="side-panel">
+        <h3>About this feed</h3>
+        <p style="font-size:13px;line-height:1.6;color:rgba(251,249,244,.85);margin:0">
+          Auto-updated daily from Khmer Times, Kampuchea Thmey, Construction &amp; Property,
+          B2B Asia News, OilPrice.com, Open Development Cambodia, Cambodianess and Ministry
+          of Mines &amp; Energy notices. Click any card to see the CBM analysis.
+        </p>
+      </div>
+    </aside>
+  </div>`;
+}
+
+function renderCategoryCards(categories) {
+  if (!categories || !categories.length) {
+    return `<div class="empty-state">No significant items for this period yet.</div>`;
+  }
+  return `<div class="cat-grid">${categories.map(c => {
+    const meta = CATEGORY_META[c.key] || { dot: "#875723" };
+    const isHigh = c.impact_label === "High impact";
+    const pill = isHigh ? IMPACT_META.High : IMPACT_META.Medium;
+    const bullets = (c.bullets || []).map(b => `<div class="bullet">
+      <span class="dot"></span>
+      <span>${esc(b.t)} <a href="#">${esc(b.src)}</a></span>
+    </div>`).join("");
+    return `<section class="cat-card">
+      <div class="cat-card-head">
+        <span class="sq" style="background:${meta.dot}"></span>
+        <h3>${esc(c.cat)}</h3>
+        <div class="spacer"></div>
+        <span class="impact-pill" style="color:${pill.fg};background:${pill.bg}">${esc(c.impact_label)}</span>
+      </div>
+      <p style="margin:0;font-size:14.5px;line-height:1.6;color:var(--fg-2)">${esc(c.summary)}</p>
+      <div style="display:flex;flex-direction:column;gap:9px">${bullets}</div>
+    </section>`;
+  }).join("")}</div>`;
+}
+
+function renderWeekly() {
+  const data = STATE.weekly;
+  if (!data) return `<div class="empty-state">No weekly summary yet. It's generated every Monday.</div>`;
+  const s = data.stats || {};
+  return `<div style="display:flex;flex-direction:column;gap:24px">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Weekly Summary · Week ${esc(data.week_number ?? "")}</span>
+        <h1>${esc(data.period_label || "")}</h1>
+        <div class="meta">${s.total_items ?? 0} updates reviewed · ${s.high_impact_count ?? 0} flagged high impact</div>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-tile"><span class="label">High impact items</span><span class="value" style="color:#B43A2F">${s.high_impact_count ?? 0}</span><span class="sub">${esc(s.high_impact_breakdown || "—")}</span></div>
+      <div class="stat-tile"><span class="label">Medium impact</span><span class="value" style="color:#C97A1B">${s.medium_impact_count ?? 0}</span><span class="sub">Spread across categories</span></div>
+      <div class="stat-tile"><span class="label">Local vs world</span><span class="value">${s.local_count ?? 0} / ${s.world_count ?? 0}</span><span class="sub">${s.local_pct ?? 0}% locally sourced this week</span></div>
+      <div class="stat-tile"><span class="label">Total items</span><span class="value">${s.total_items ?? 0}</span><span class="sub">Reviewed this week</span></div>
+    </div>
+    ${renderCategoryCards(data.categories)}
+  </div>`;
+}
+
+function renderMonthly() {
+  const data = STATE.monthly;
+  if (!data) return `<div class="empty-state">No monthly summary yet. It's generated on the 1st of each month.</div>`;
+  const kpis = (data.kpis || []).map(k => `<div class="kpi-tile">
+    <span class="label">${esc(k.label)}</span>
+    <span class="value">${esc(k.value)}</span>
+  </div>`).join("");
+  return `<div>
+    <div class="monthly-hero">
+      <div class="monthly-hero-inner">
+        <span class="eyebrow" style="color:#F1BF31">Monthly Executive Summary · ${esc(data.period_label || "")}</span>
+        <h1>${esc(data.headline || "")}</h1>
+        <p>${esc(data.subhead || "")}</p>
+      </div>
+    </div>
+    <div style="max-width:1100px;margin:0 auto;padding:36px 28px 80px;display:flex;flex-direction:column;gap:40px">
+      <div class="kpi-grid">${kpis}</div>
+      ${renderCategoryCards(data.categories)}
+    </div>
+  </div>`;
+}
+
+function render() {
+  renderTabs();
+  const app = document.getElementById("app");
+  if (STATE.tab === "daily") {
+    app.innerHTML = `<main style="max-width:1440px;margin:0 auto;padding:32px 28px 80px">${renderDaily()}</main>`;
+    app.querySelectorAll(".chip").forEach(el => el.addEventListener("click", () => {
+      const cat = el.dataset.cat;
+      STATE.categoryFilter = STATE.categoryFilter === cat ? null : cat;
+      render();
+    }));
+    app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => {
+      document.getElementById("analysis-" + el.dataset.idx).classList.toggle("open");
+    }));
+  } else if (STATE.tab === "weekly") {
+    app.innerHTML = `<main style="max-width:1440px;margin:0 auto;padding:32px 28px 80px">${renderWeekly()}</main>`;
+  } else {
+    app.innerHTML = renderMonthly();
+  }
+}
+
+async function init() {
+  document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => {
+    STATE.tab = b.dataset.tab;
+    STATE.categoryFilter = null;
+    render();
+  }));
+  const [daily, weekly, monthly] = await Promise.all([
+    loadJSON("data/daily.json"),
+    loadJSON("data/weekly.json"),
+    loadJSON("data/monthly.json"),
+  ]);
+  STATE.daily = daily; STATE.weekly = weekly; STATE.monthly = monthly;
+  render();
+}
+init();
+</script>
+</body>
+</html>
