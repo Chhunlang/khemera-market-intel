@@ -42,6 +42,19 @@ SOURCES = [
 #   - Ministry of Commerce (moc.gov.kh): same 403 behavior, could not verify a safe fetch path
 # Their stories are still picked up indirectly whenever Khmer Times / Kampuchea Thmey /
 # Construction & Property report on the same news (as in the mockup).
+#
+# Checked against cambodia-news-sources.md (2026-09-17) and NOT added:
+#   - Agence Kampuchea Presse (akp.gov.kh): no RSS feed found; page is JS-rendered so the
+#     generic HTML extractor finds zero headline links. Would need a dedicated scraper.
+#   - Reuters Energy: no working RSS endpoint found; Reuters actively blocks scrapers.
+#   - U.S. EIA: publishes a data API (WTI/Brent benchmark prices), not a news feed — doesn't
+#     fit this pipeline's title/url/snippet item schema.
+#   - GlobalPetrolPrices.com Cambodia: a single weekly price snapshot page, not a list of
+#     articles — same schema mismatch as EIA.
+#   - Al Jazeera Economy / Xinhua English: RSS works, but only as global "all news" feeds
+#     (no economy-specific feed exists) — adding them would flood the digest with mostly
+#     non-Cambodia stories. Skipped to keep the feed relevant.
+#   - Khmer Times — Property section: redundant with the main Khmer Times feed already above.
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 ARCHIVE_DIR = os.path.join(DATA_DIR, "archive")

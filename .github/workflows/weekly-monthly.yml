@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: data-update
@@ -50,9 +51,23 @@ jobs:
         run: python scripts/build_weekly_monthly.py --period ${{ steps.period.outputs.value }}
 
       - name: Commit and push updated data
+        id: commit
         run: |
           git config user.name "khemera-bot"
           git config user.email "actions@github.com"
           git add data/
-          git diff --cached --quiet || git commit -m "${{ steps.period.outputs.value }} summary update $(date -u +'%Y-%m-%d')"
-          git push
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "${{ steps.period.outputs.value }} summary update $(date -u +'%Y-%m-%d')"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # See daily.yml for why this is needed: GITHUB_TOKEN pushes don't trigger
+      # other workflows' `on: push` events, so pages.yml needs an explicit kick.
+      - name: Trigger Pages deploy
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --repo "${{ github.repository }}"
