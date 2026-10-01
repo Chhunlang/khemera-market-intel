@@ -1,8 +1,25 @@
 {
-  "generated_at": null,
-  "period_label": "Not generated yet",
-  "headline": "Monthly summary will appear after the first run",
-  "subhead": "This runs automatically on the 1st of each month once enough daily data has accumulated.",
-  "kpis": [],
+  "generated_at": "2026-10-01T15:35:36.610262+07:00",
+  "period_label": "October 2026",
+  "headline": "October 2026",
+  "subhead": "No high-impact items recorded this month.",
+  "kpis": [
+    {
+      "label": "Items reviewed",
+      "value": "0"
+    },
+    {
+      "label": "High impact",
+      "value": "0"
+    },
+    {
+      "label": "Local vs World",
+      "value": "0 / 0"
+    },
+    {
+      "label": "Locally sourced",
+      "value": "0%"
+    }
+  ],
   "categories": []
 }
